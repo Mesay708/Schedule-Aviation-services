@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aerodrome Forecast Form S-4</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* Header Styles */
+        .document-header {
+            width: 100%;
+            border-bottom: 2px solid #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+        .header-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            margin-bottom: 15px;
+            align-items: right;
+        }
+        .header-grid div {
+            text-align: center;
+        }
+        .header-grid div:first-child {
+            text-align: left;
+        }
+        .header-grid div:last-child {
+            text-align: right;
+        }
+        .header-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #003366;
+            background-color: #e6f2ff;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        .document-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-top: 5px;
+            color: #555;
+        }
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80px;
+            margin-bottom: 10px;
+        }
+        .logo-img {
+            height: 70px;
+            max-width: 200px;
+            object-fit: contain;
+        }
+        
+        /* Table Styles */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #003366;
+            color: white;
+            font-weight: bold;
+        }
+        .cloud-header {
+            text-align: center;
+        }
+        .selected {
+            background-color: #d4edff;
+        }
+        
+        /* Content and Controls */
+        .table-container {
+            flex: 1;
+        }
+        .controls {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        button {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #deleteRow {
+            background-color: #f44336;
+        }
+        #deleteRow:hover {
+            background-color: #d32f2f;
+        }
+        #downloadPDF {
+            background-color: #2196F3;
+        }
+        #downloadPDF:hover {
+            background-color: #0b7dda;
+        }
+        #printForm {
+            background-color: #ff9800;
+        }
+        #printForm:hover {
+            background-color: #e68a00;
+        }
+        
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            font-size: 24px;
+        }
+        
+        /* Signature section */
+        .signature-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ccc;
+        }
+        .signature-field {
+            flex: 1;
+            margin: 0 15px;
+        }
+        .signature-field label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .signature-field input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .signature-line {
+            height: 1px;
+            background-color: #333;
+            margin-top: 5px;
+        }
+        .date-field {
+            width: 120px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Document Header Section -->
+    <div class="document-header">
+        <!-- Centered Logo -->
+        <div class="logo-container">
+            <img src="logo.jpg" alt="Company Logo" class="logo-img" id="companyLogo">
+        </div>
+        
+        <style>
+    .header-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
+        text-align: center; /* Center text in all grid cells */
+    }
+    
+    /* If you only want the first div centered */
+    .header-grid div:first-child {
+        grid-column: 1 / -1; /* Span all columns (if needed) */
+        text-align: center;
+    }
+</style>
+
+<div class="header-grid">
+    <div>ETHIOPIA METEOROLOGY INSTITUTE:</div>
+    <div>Aviation Meteorology Service</div>
+  
+</div>
+    
+  </style>
+            <div>
+            <style>
+    .header-grid {
+        text-align: center; 
+    }
+</style>
+
+            </div>
+            <div>Document No.OF/EMI/AMS/43</div>
+             </style>
+            <div>
+            <style>
+    .header-grid {
+        text-align: end; 
+    }
+</style>
+            
+            
+            <div></div>
+        </div>
+       
+        <div class="header-title">Aerodrome Forecast Form S-4</div>
+        
+        <div class="document-info">
+            <span>Issue No. 3</span>
+            <span>Page No. Page 1 of 1</span>
+        </div>
+    </div>
+    
+    <div class="table-container">
+        <table id="weatherTable">
+            <thead>
+                <tr> 
+                    <tr>
+                    <th rowspan="2">Flight Number</th>
+        
+                    <th rowspan="2">Aerodrome</th>
+                    <th rowspan="2">Validity Time</th>
+                    <th rowspan="2">Type and Time Variation</th>
+                    <th rowspan="2">Surface Wind Direction and speed</th>
+                    <th rowspan="2">Surface Visibility</th>
+                    <th rowspan="2">Weather</th>
+                    <th colspan="3" class="cloud-header">Cloud</th>
+                    <th rowspan="2">Sunset</th>
+                </tr>
+                <tr>
+                    <th>Lower</th>
+                    <th>Medium</th>
+                    <th>Higher</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                </tr>
+                <tr>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Signature Section -->
+    <div class="signature-section">
+        <div class="signature-field">
+            <label for="preparedBy">Prepared by:</label>
+            <input type="text" id="preparedBy" value="">
+            <div class="signature-line"></div>
+        </div>
+        <div class="signature-field">
+            <label for="approvedBy">Approved by:</label>
+            <input type="text" id="approvedBy" value="Kasa Fikadu">
+            <div class="signature-line"></div>
+        </div>
+        <div class="signature-field">
+            <label for="date">Date:</label>
+            <input type="date" id="date" value="">
+            <div class="signature-line"></div>
+        </div>
+    </div>
+    
+    <div class="controls">
+        <button id="addRow">Add Row</button>
+        <button id="deleteRow">Delete Selected Row</button>
+        <button id="downloadPDF">Download as PDF</button>
+        <button id="printForm">Print Form</button>
+    </div>
+
+    <script>
+        // Set default date to today
+        document.getElementById('date').valueAsDate = new Date();
+
+        // Show loading overlay
+        function showLoading(message) {
+            const overlay = document.createElement('div');
+            overlay.className = 'loading-overlay';
+            overlay.innerHTML = `<div>${message}</div>`;
+            document.body.appendChild(overlay);
+            return overlay;
+        }
+
+        // Hide loading overlay
+        function hideLoading(overlay) {
+            if (overlay && overlay.parentNode) {
+                overlay.parentNode.removeChild(overlay);
+            }
+        }
+
+        // Make rows selectable
+        document.querySelectorAll('#weatherTable tbody tr').forEach(row => {
+            row.addEventListener('click', function() {
+                document.querySelectorAll('#weatherTable tbody tr').forEach(r => {
+                    r.classList.remove('selected');
+                });
+                this.classList.add('selected');
+            });
+        });
+
+        // Add row button
+        document.getElementById('addRow').addEventListener('click', function() {
+            const tbody = document.querySelector('#weatherTable tbody');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+            `;
+            newRow.addEventListener('click', function() {
+                document.querySelectorAll('#weatherTable tbody tr').forEach(r => {
+                    r.classList.remove('selected');
+                });
+                this.classList.add('selected');
+            });
+            tbody.appendChild(newRow);
+        });
+
+        // Delete row button
+        document.getElementById('deleteRow').addEventListener('click', function() {
+            const selectedRow = document.querySelector('#weatherTable tbody tr.selected');
+            if (selectedRow) {
+                selectedRow.remove();
+            } else {
+                alert('Please select a row to delete by clicking on it.');
+            }
+        });
+
+        // Function to generate PDF
+        async function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('l', 'mm', 'a4');
+            
+            try {
+                // Add logo to PDF
+                const logo = document.getElementById('companyLogo');
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = logo.naturalWidth;
+                canvas.height = logo.naturalHeight;
+                ctx.drawImage(logo, 0, 0);
+                const logoDataUrl = canvas.toDataURL('image/jpeg');
+                doc.addImage(logoDataUrl, 'JPEG', 20, 10, 30, 20);
+                
+                // Add document title and info
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.setTextColor(0, 51, 102);
+                doc.text('ETHIOPIAN METEOROLOGY INSTITUTE', 105, 15);
+                doc.text('Aerodrome Forecast Form S-4', 105, 22);
+                
+                doc.setFontSize(10);
+                doc.setFont(undefined, 'normal');
+                doc.text('Document No: OF/EMI/AMS/43', 270, 15, { align: 'right' });
+                doc.text('Issue No. 3 | Page 1 of 1', 270, 20, { align: 'right' });
+                
+                // Get table data
+                const table = document.getElementById('weatherTable');
+                const data = [];
+                
+                table.querySelectorAll('tbody tr').forEach(row => {
+                    const rowData = [];
+                    row.querySelectorAll('td').forEach(cell => {
+                        rowData.push(cell.textContent || '-');
+                    });
+                    data.push(rowData);
+                });
+                
+                // Generate PDF table
+                doc.autoTable({
+                    head: [
+                        [
+                            {content: 'Flight Number', rowSpan: 2, styles: {fillColor: [0, 51, 102], textColor: 255}},
+                            {content: 'Aerodrome', rowSpan: 2, styles: {fillColor: [0, 51, 102], textColor: 255}},
+                            {content: 'Validity Time', rowSpan: 2, styles: {fillColor: [0, 51, 102], textColor: 255}},
+                            {content: 'Type and Time Variation', rowSpan: 2, styles: {fillColor: [0, 51, 102], textColor: 255}},
+                            {content: 'Surface Wind Direction and speed', rowSpan: 2, styles: {fillColor: [0, 51, 102], textColor: 255}},
+                            {content: 'Surface Visibility', rowSpan: 2, styles: {fillColor: [0, 51, 102], textColor: 255}},
+                            {content: 'Weather', rowSpan: 2, styles: {fillColor: [0, 51, 102], textColor: 255}},
+                            {content: 'Cloud', colSpan: 3, styles: {fillColor: [0, 51, 102], textColor: 255}},
+                            {content: 'Sunset', rowSpan: 2, styles: {fillColor: [0, 51, 102], textColor: 255}}
+                        ],
+                        [
+                            {content: 'Lower', styles: {fillColor: [0, 51, 102], textColor: 255}},
+                            {content: 'Medium', styles: {fillColor: [0, 51, 102], textColor: 255}},
+                            {content: 'Higher', styles: {fillColor: [0, 51, 102], textColor: 255}}
+                        ]
+                    ],
+                    body: data,
+                    startY: 30,
+                    margin: { left: 10 },
+                    styles: { 
+                        fontSize: 8,
+                        cellPadding: 2,
+                        overflow: 'linebreak'
+                    },
+                    columnStyles: {
+                        0: {cellWidth: 20},
+                        1: {cellWidth: 25},
+                        2: {cellWidth: 20},
+                        3: {cellWidth: 25},
+                        4: {cellWidth: 30},
+                        5: {cellWidth: 20},
+                        6: {cellWidth: 20},
+                        7: {cellWidth: 15},
+                        8: {cellWidth: 15},
+                        9: {cellWidth: 15},
+                        10: {cellWidth: 15}
+                    }
+                });
+                
+                // Add footer with signature
+                const finalY = doc.lastAutoTable.finalY || 30;
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                
+                // Get signature values
+                const preparedBy = document.getElementById('preparedBy').value || 'Prepared by';
+                const approvedBy = document.getElementById('approvedBy').value || 'Approved by';
+                const dateValue = document.getElementById('date').value || new Date().toLocaleDateString();
+                
+                doc.text(`Prepared by: ${preparedBy}`, 20, finalY + 15);
+                doc.text(`Approved by: ${approvedBy}`, 150, finalY + 15);
+                doc.text(`Date: ${dateValue}`, 270, finalY + 15);
+                
+                return doc;
+            } catch (error) {
+                console.error("Error generating PDF:", error);
+                throw error;
+            }
+        }
+
+         // Download as PDF button (updated to include header)
+        document.getElementById('downloadPDF').addEventListener('click', function() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('l', 'mm', 'a4'); // Landscape orientation
+            
+            // Add header content to PDF
+            doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0);
+            
+            // Add smaller logo placeholder
+            doc.setFillColor(240, 240, 240);
+            doc.rect(10, 5, 00, 10, 'F');  // Reduced width from 30 to 20 and height from 20 to 15
+            doc.setTextColor(102, 102, 102);
+            doc.setFontSize(4);  // Reduced font size for the "LOGO" text
+            doc.text('LOGO', 30, 18, { align: 'center' });  // Adjusted position to center in smaller rectangle
+            // Add document title and info
+            doc.setFontSize(14);
+            doc.setFont(undefined, 'bold');
+            doc.text('Ethiopian Meteorology Institute', 105, 15);
+            doc.text('Aerodrome Forecast Form S-4', 105, 22);
+            
+            doc.setFontSize(10);
+            doc.setFont(undefined, 'normal');
+            doc.text('Document No: OF/EMI/AMS/43', 270, 15, { align: 'right' });
+            doc.text('Issue No. 3 | Page 1 of 1', 270, 20, { align: 'right' });
+            
+            // Get table data
+            const table = document.getElementById('weatherTable');
+            const data = [];
+            
+            // Get table data
+            table.querySelectorAll('tbody tr').forEach(row => {
+                const rowData = [];
+                row.querySelectorAll('td').forEach(cell => {
+                    rowData.push(cell.textContent || '-');
+                });
+                data.push(rowData);
+            });
+            
+            // Generate PDF with table
+            doc.autoTable({
+                head: [
+                    [
+                        {content: 'Flight Number', rowSpan: 2},
+                        {content: 'Aerodrome', rowSpan: 2},
+                        {content: 'Validity Time', rowSpan: 2},
+                        {content: 'Type and Time Variation', rowSpan: 2},
+                        {content: 'Surface Wind Direction and speed', rowSpan: 2},
+                        {content: 'Surface Visibility', rowSpan: 2},
+                        {content: 'Weather', rowSpan: 2},
+                        {content: 'Cloud', colSpan: 3},
+                        {content: 'Sunset', rowSpan: 2}
+                    ],
+                    [
+                        'Lower',
+                        'Medium',
+                        'Higher'
+                    ]
+                ],
+                body: data,
+                startY: 30,
+                margin: { left: 10 },
+                styles: { 
+                    fontSize: 8,
+                    cellPadding: 2,
+                    overflow: 'linebreak'
+                },
+                headStyles: {
+                    fillColor: [242, 242, 242],
+                    textColor: 0,
+                    fontStyle: 'bold',
+                    fontSize: 8
+                },
+                columnStyles: {
+                    0: {cellWidth: 20},
+                    1: {cellWidth: 25},
+                    2: {cellWidth: 20},
+                    3: {cellWidth: 25},
+                    4: {cellWidth: 30},
+                    5: {cellWidth: 20},
+                    6: {cellWidth: 20},
+                    7: {cellWidth: 15},
+                    8: {cellWidth: 15},
+                    9: {cellWidth: 15},
+                    10: {cellWidth: 15}
+                },
+                tableWidth: 'wrap'
+            });
+            
+            // Add footer with signature
+            const pageHeight = doc.internal.pageSize.height;
+            const finalY = doc.lastAutoTable.finalY || 30;
+            
+            // Calculate positions for signature lines
+            const signatureY = finalY + 15;
+            const leftSignatureX = 20;
+            const middleSignatureX = 105;
+            const rightSignatureX = 190;
+            
+            // Get signature values
+            const preparedBy = document.getElementById('preparedBy').value || '';
+            const approvedBy = document.getElementById('approvedBy').value || '';
+            const dateValue = document.getElementById('date').value || new Date().toLocaleDateString();
+            
+            // Draw signature lines and labels
+            doc.setFontSize(10);
+            
+            // Prepared by
+            doc.text(`Prepared by: ${preparedBy}`, leftSignatureX, signatureY);
+            doc.line(leftSignatureX + 25, signatureY + 1, leftSignatureX + 80, signatureY + 1);
+            
+            // Approved by
+            doc.text(`Approved by: ${approvedBy}`, middleSignatureX, signatureY);
+            doc.line(middleSignatureX + 25, signatureY + 1, middleSignatureX + 80, signatureY + 1);
+            
+            // Date
+            doc.text(`Date: ${dateValue}`, rightSignatureX, signatureY);
+            doc.line(rightSignatureX + 15, signatureY + 1, rightSignatureX + 70, signatureY + 1);
+            
+            doc.save('aerodrome_forecast_form.pdf');
+        });
+
+        // Print Form button
+        document.getElementById('printForm').addEventListener('click', function() {
+            window.print();
+        });
+    </script>
+</body>
+</html>
